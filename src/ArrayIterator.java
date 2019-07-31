@@ -1,12 +1,12 @@
 import java.util.Iterator;
 
-public class ArrayIterator implements Iterator {
+public class ArrayIterator<T> implements Iterator {
 
-    private int[] arr;
+    private T[] arr;
     private int size;
     private int currIndex = 0;
 
-    ArrayIterator(int[] arr, int size) {
+    ArrayIterator(T[] arr, int size) {
         this.arr = arr;
         this.size = size;
     }
@@ -18,7 +18,7 @@ public class ArrayIterator implements Iterator {
 
     @Override
     public Object next() {
-        int res = arr[currIndex];
+        T res = arr[currIndex];
         currIndex++;
         return res;
     }
