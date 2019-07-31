@@ -1,18 +1,17 @@
 import java.util.Arrays;
-import java.util.Iterator;
 
-public class Array implements Iterable {
+public class Array<T> implements Iterable {
 
-    private int[] arr;
+    private T[] arr;
     private int size;
     private static final int DEFAULT_CAPACITY = 10;
 
     Array() {
-        arr = new int[DEFAULT_CAPACITY];
+        arr = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     Array(int capacity) {
-        arr = new int[capacity];
+        arr = (T[]) new Object[capacity];
     }
 
     public int getSize() {
@@ -23,66 +22,66 @@ public class Array implements Iterable {
         return size == 0;
     }
 
-    public int indexOf(int number) {
+    public int indexOf(T item) {
         for (int i = 0; i < size; i++) {
-            if (arr[i] == number) {
+            if (arr[i].equals(item)) {
                 return i;
             }
         }
         return -1;
     }
 
-    public int lastIndexOf(int number) {
+    public int lastIndexOf(T item) {
         for (int i = size - 1; i >= 0; i--) {
-            if (arr[i] == number) {
+            if (arr[i].equals(item)) {
                 return i;
             }
         }
         return -1;
     }
 
-    public int get(int index) {
+    public T get(int index) {
         if (rangeCheck(index)) {
             return arr[index];
         }
-        return -1;
+        return null;
     }
 
-    public int set(int index, int number) {
-        int oldValue = -1;
+    public T set(int index, T item) {
+        T oldValue = null;
         if (rangeCheck(index)) {
             oldValue = arr[index];
-            arr[index] = number;
+            arr[index] = item;
         }
         return oldValue;
     }
 
-    public boolean add(int number) {
+    public boolean add(T item) {
         ensureCapacity(size + 1);
-        arr[size] = number;
+        arr[size] = item;
         size++;
         return true;
     }
 
-    public boolean addAtPosition(int index, int number) {
+    public boolean addAtPosition(int index, T item) {
         if (index >= size) {
             return false;
         }
         ensureCapacity(size + 1);
         copyArray(arr, index, arr, index + 1, size - index);
-        arr[index] = number;
+        arr[index] = item;
         size++;
         return true;
     }
 
-    public boolean addAll(int arrToAdd[]) {
+    public boolean addAll(T arrToAdd[]) {
         ensureCapacity(size + arrToAdd.length);
         copyArray(arrToAdd, 0, arr, size, arrToAdd.length);
         size += arrToAdd.length;
         return true;
     }
 
-    public boolean addAll(int index, int arrToAdd[]) {
+    public boolean addAll(int index, T arrToAdd[]) {
         if (index > size || index < 0) {
             return false;
         }
@@ -100,8 +99,8 @@ public class Array implements Iterable {
         return true;
     }
 
-    public boolean remove(int number) {
-        int foundIndex = indexOf(number);
+    public boolean remove(T item) {
+        int foundIndex = indexOf(item);
         if (foundIndex == -1) {
             return false;
         }
@@ -109,11 +108,11 @@ public class Array implements Iterable {
         return true;
     }
 
-    public int removeByIndex(int index) {
+    public T removeByIndex(int index) {
         if(!rangeCheck(index)){
-            return -1;
+            return null;
         }
-        int oldValue = arr[index];
+        T oldValue = arr[index];
         copyArray(arr, index + 1, arr, index, size - index);
         size--;
         return oldValue;
@@ -143,15 +142,15 @@ public class Array implements Iterable {
         arr = copyArray(arr, newCapacity);
     }
 
-    private int[] copyArray(int[] elementsArr, int newSize) {
-        int[] newArr = new int[newSize];
+    private T[] copyArray(T[] elementsArr, int newSize) {
+        T[] newArr = (T[]) new Object[newSize];
         for (int i = 0; i < size; i++) {
             newArr[i] = elementsArr[i];
         }
         return newArr;
     }
 
-    private void copyArray(int[] src, int srcPos, int[] dest, int destPos, int length) {
+    private void copyArray(T[] src, int srcPos, T[] dest, int destPos, int length) {
         if (Arrays.equals(src, dest)) {
             src = copyArray(src, src.length);
         }
@@ -177,7 +176,7 @@ public class Array implements Iterable {
     }
 
     @Override
-    public Iterator iterator() {
+    public ArrayIterator iterator() {
         return new ArrayIterator(arr, size);
     }
 }
